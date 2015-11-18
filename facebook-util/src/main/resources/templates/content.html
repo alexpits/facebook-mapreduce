@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>Facebook Public Feed</title>
+<link href="/css/styles.css" rel="stylesheet" type="text/css"
+	media="all" />
+</head>
+<body>
+	<h3>
+		<span th:text="${session.facebookProfile.name}" />
+	</h3>
+	<form id="myForm" action="/hbase" method="POST">
+		<input type="submit" value="Upload to HBase" />
+	</form>
+
+	<table th:each="post:${session.feed}">
+		<tr>
+			<td><b th:text="${post.createdTime}" />
+					<div th:text="${post.message}" /></td>
+		</tr>
+	</table>
+
+</body>
+</html>

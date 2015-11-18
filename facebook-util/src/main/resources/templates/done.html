@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>Facebook Public Feed</title>
+<link href="/css/styles.css" rel="stylesheet" type="text/css"
+	media="all" />
+</head>
+<body>
+	<h3>
+		<span th:text="${session.facebookProfile.name}" />
+	</h3>
+	<p>Uploaded to HBase successfully.</p>
+
+	<form id="myForm" action="/" method="GET">
+		<input type="submit" value="OK" />
+	</form>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>Error occured</title>
+<link href="/css/styles.css" rel="stylesheet" type="text/css"
+	media="all" />
+</head>
+<body>
+	<h3>
+		<span th:text="${error}" />
+	</h3>
+	<p>
+		<span th:text="${message}" />
+	</p>
+
+	<form id="myForm" action="/" method="GET">
+		<input type="submit" value="OK" />
+	</form>
+
+</body>
+</html>
