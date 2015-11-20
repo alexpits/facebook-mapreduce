@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:hdp="http://www.springframework.org/schema/hadoop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/hadoop http://www.springframework.org/schema/hadoop/spring-hadoop.xsd">
+	<bean id="hbaseTemplate" class="org.springframework.data.hadoop.hbase.HbaseTemplate">
+		<property name="configuration" ref="hbaseConfiguration" />
+	</bean>
+	<hdp:configuration id="hadoopConfiguration">
+	</hdp:configuration>
+	<hdp:hbase-configuration stop-proxy="true"
+		delete-connection="true">
+		hbase.master=192.168.56.101:60000
+		hbase.zookeeper.quorum=192.168.56.101
+		hbase.zookeeper.property.clientPort=2181
+	</hdp:hbase-configuration>
+</beans>

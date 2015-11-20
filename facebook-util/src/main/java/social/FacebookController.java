@@ -3,9 +3,9 @@ package social;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.Post;
 import org.springframework.social.facebook.api.User;
@@ -16,22 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/")
-public class FacebookController {
+public class FacebookController extends BaseController {
 
+	@Autowired
 	private Facebook facebook;
 
-	@Inject
-	public FacebookController(Facebook facebook) {
-		this.facebook = facebook;
-	}
-
-	@RequestMapping(method = RequestMethod.GET)
-	public String loginFacebook() {
-		return "redirect:/connect/facebook";
-	}
-
 	@RequestMapping(method = RequestMethod.POST)
-	public String readFacebook(HttpSession session, @RequestParam(value = "userId", required = false) String userId) {
+	public String downloadFacebook(HttpSession session,
+			@RequestParam(value = "userId", required = false) String userId) {
 		if (userId == null || userId.isEmpty()) {
 			userId = "me";
 		}
