@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>Results</title>
+<link href="/css/styles.css" rel="stylesheet" type="text/css"
+	media="all" />
+</head>
+<body>
+	<h3>Results</h3>
+	<table th:each="message:${resultList}">
+		<tr>
+			<td><a th:href="@{'/result'(id=${message.id})}"
+				th:text="${message.name}" /></td>
+		</tr>
+	</table>
+
+</body>
+</html>

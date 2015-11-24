@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>MapReduce Result</title>
+<link href="/css/styles.css" rel="stylesheet" type="text/css"
+	media="all" />
+</head>
+<body>
+	<h3>
+		<span th:text="${user.name}" />
+	</h3>
+
+	<form id="myForm" method="POST">
+		<input type="hidden" th:value="${user.id}" /> <input type="submit"
+			value="MapReduce" />
+	</form>
+
+	<table>
+		<tr>
+			<td><div th:text="${user.firstName}" /></td>
+		</tr>
+	</table>
+
+</body>
+</html>

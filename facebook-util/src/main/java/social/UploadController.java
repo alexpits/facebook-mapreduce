@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping("/upload")
-public class UploadController extends BaseController {
+public class UploadController extends AbstractController {
 
 	@Autowired
 	private HBaseService hBase;

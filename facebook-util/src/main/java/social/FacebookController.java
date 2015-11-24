@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/")
-public class FacebookController extends BaseController {
+public class FacebookController extends AbstractController {
 
 	@Autowired
 	private Facebook facebook;

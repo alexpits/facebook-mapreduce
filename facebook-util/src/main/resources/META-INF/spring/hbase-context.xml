@@ -10,8 +10,8 @@
 	</hdp:configuration>
 	<hdp:hbase-configuration stop-proxy="true"
 		delete-connection="true">
-		hbase.master=192.168.56.101:60000
-		hbase.zookeeper.quorum=192.168.56.101
-		hbase.zookeeper.property.clientPort=2181
+		hbase.master=[hbase.host]:[hbase.port]
+		hbase.zookeeper.quorum=[zookeeper.host]
+		hbase.zookeeper.property.clientPort=[zookeeper.port]
 	</hdp:hbase-configuration>
 </beans>
