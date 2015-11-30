@@ -14,7 +14,7 @@
 
 	<table th:each="post:${session.feed}">
 		<tr>
-			<td><b th:text="${post.createdTime}" />
+			<td width="800px"><b th:text="${post.createdTime}" />
 					<div th:text="${post.message}" /></td>
 		</tr>
 	</table>

@@ -17,20 +17,16 @@ public class ResultController {
 	private HBaseService hBase;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String getResult(Model model, @RequestParam(value = "id", required = false) String id) throws IOException {
-		if (id == null) {
-			model.addAttribute("resultList", hBase.scanResultList());
+	public String getResult(Model model, @RequestParam(value = "id", required = false) String userId) throws IOException {
+		if (userId == null) {
+			model.addAttribute("resultList", hBase.getUsers());
 			return "resultList";
 		} else {
-			model.addAttribute("user", hBase.getResult(id));
+			final int MIN_COUNT = 5;
+			model.addAttribute("user", hBase.getUser(userId));
+			model.addAttribute("wordcount", hBase.getWords(userId, MIN_COUNT));
 			return "result";
 		}
-	}
-
-	@RequestMapping(method = RequestMethod.POST)
-	public String mapReduce(Model model, @RequestParam(value = "id", required = true) String id) throws IOException {
-		model.addAttribute("user", hBase.getResult(id));
-		return "result";
 	}
 
 }

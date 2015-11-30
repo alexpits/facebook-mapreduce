@@ -9,14 +9,10 @@
 		<span th:text="${user.name}" />
 	</h3>
 
-	<form id="myForm" method="POST">
-		<input type="hidden" th:value="${user.id}" /> <input type="submit"
-			value="MapReduce" />
-	</form>
-
-	<table>
+	<table th:each="word:${wordcount}">
 		<tr>
-			<td><div th:text="${user.firstName}" /></td>
+			<td width="150px" th:text="${word.key}" />
+			<td width="50px" th:text="${word.value}" />
 		</tr>
 	</table>
 
