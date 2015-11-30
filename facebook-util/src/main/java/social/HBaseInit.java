@@ -29,12 +29,13 @@ public class HBaseInit implements CommandLineRunner {
 			// Instantiating HbaseAdmin class
 			HBaseAdmin admin = (HBaseAdmin) connection.getAdmin();
 
-			createTable(admin, "feed", force, "post");
-			createTable(admin, "output", force, "result");
+			createTable(admin, HBaseService.FEED_TABLE, force, HBaseService.CF_POST);
+			createTable(admin, HBaseService.PROFILE_TABLE, force, HBaseService.CF_USER);
+			createTable(admin, HBaseService.WORDCOUNT_TABLE, force, HBaseService.CF_WORD);
 		}
 	}
 
-	private void createTable(HBaseAdmin admin, String tableName, boolean force, String... columnFamiles)
+	private void createTable(HBaseAdmin admin, TableName tableName, boolean force, byte[]... columnFamiles)
 			throws IOException {
 
 		boolean exists = admin.tableExists(tableName);
@@ -49,10 +50,10 @@ public class HBaseInit implements CommandLineRunner {
 			}
 
 			// Instantiating table descriptor class
-			HTableDescriptor tableDescriptor = new HTableDescriptor(TableName.valueOf(tableName));
+			HTableDescriptor tableDescriptor = new HTableDescriptor(tableName);
 
 			// Adding column families to table descriptor
-			for (String family : columnFamiles) {
+			for (byte[] family : columnFamiles) {
 				tableDescriptor.addFamily(new HColumnDescriptor(family));
 			}
 
