@@ -35,24 +35,24 @@ public class HBaseService {
 	private HbaseTemplate hbaseConfig;
 
 	// Tables
-	public final static TableName FEED_TABLE = TableName.valueOf("feed");
-	public final static TableName PROFILE_TABLE = TableName.valueOf("profile");
-	public final static TableName WORDCOUNT_TABLE = TableName.valueOf("wordcount");
+	public static final TableName FEED_TABLE = TableName.valueOf("feed");
+	public static final TableName PROFILE_TABLE = TableName.valueOf("profile");
+	public static final TableName WORDCOUNT_TABLE = TableName.valueOf("wordcount");
 
 	// Column families
-	public final static byte[] CF_USER = Bytes.toBytes("user");
-	public final static byte[] CF_POST = Bytes.toBytes("post");
-	public final static byte[] CF_WORD = Bytes.toBytes("word");
+	public static final byte[] CF_USER = Bytes.toBytes("user");
+	public static final byte[] CF_POST = Bytes.toBytes("post");
+	public static final byte[] CF_WORD = Bytes.toBytes("word");
 
 	// Columns
-	private final static byte[] USERID = Bytes.toBytes("userid");
-	private final static byte[] USERNAME = Bytes.toBytes("username");
-	private final static byte[] MESSAGE = Bytes.toBytes("message");
-	private final static byte[] VALUE = Bytes.toBytes("value");
-	private final static byte[] COUNT = Bytes.toBytes("count");
-	private final static byte[] JOBSTATUS = Bytes.toBytes("status");
+	private static final byte[] USERID = Bytes.toBytes("userid");
+	private static final byte[] USERNAME = Bytes.toBytes("username");
+	private static final byte[] MESSAGE = Bytes.toBytes("message");
+	private static final byte[] VALUE = Bytes.toBytes("value");
+	private static final byte[] COUNT = Bytes.toBytes("count");
+	private static final byte[] JOBSTATUS = Bytes.toBytes("status");
 
-	private final static byte[] PENDING = Bytes.toBytes(0);
+	private static final byte[] PENDING = Bytes.toBytes(0);
 
 	public void upload(User profile, List<Post> feed) throws IOException {
 		try (Connection connection = ConnectionFactory.createConnection(hbaseConfig.getConfiguration())) {
