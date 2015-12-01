@@ -82,9 +82,9 @@ public class HBaseService {
 
 	public User getUser(String id) throws IOException {
 		User user = null;
+		Get g = new Get(Bytes.toBytes(id));
 		try (Connection connection = ConnectionFactory.createConnection(hbaseConfig.getConfiguration())) {
 			try (HTable hTable = (HTable) connection.getTable(PROFILE_TABLE)) {
-				Get g = new Get(Bytes.toBytes(id));
 				Result result = hTable.get(g);
 				byte[] name = result.getValue(CF_USER, USERNAME);
 				user = new User(id, Bytes.toString(name), null, null, null, null);
@@ -95,22 +95,23 @@ public class HBaseService {
 
 	public Map<String, Integer> getWords(String userId, int minCount) throws IOException {
 		Map<String, Integer> words = new HashMap<String, Integer>();
+
+		SingleColumnValueFilter userFilter = new SingleColumnValueFilter(CF_WORD, USERID, CompareOp.EQUAL,
+				Bytes.toBytes(userId));
+		SingleColumnValueFilter countFilter = new SingleColumnValueFilter(CF_WORD, COUNT, CompareOp.GREATER_OR_EQUAL,
+				Bytes.toBytes(minCount));
+		FilterList filterList = new FilterList();
+		filterList.addFilter(userFilter);
+		filterList.addFilter(countFilter);
+		Scan scan = new Scan();
+		scan.setFilter(filterList);
+		scan.addColumn(CF_WORD, USERID);
+		scan.addColumn(CF_WORD, VALUE);
+		scan.addColumn(CF_WORD, COUNT);
+		scan.setCaching(500);
+
 		try (Connection connection = ConnectionFactory.createConnection(hbaseConfig.getConfiguration())) {
 			try (HTable hTable = (HTable) connection.getTable(WORDCOUNT_TABLE)) {
-				SingleColumnValueFilter userFilter = new SingleColumnValueFilter(CF_WORD, USERID, CompareOp.EQUAL,
-						Bytes.toBytes(userId));
-				SingleColumnValueFilter countFilter = new SingleColumnValueFilter(CF_WORD, COUNT,
-						CompareOp.GREATER_OR_EQUAL, Bytes.toBytes(minCount));
-				FilterList filterList = new FilterList();
-				filterList.addFilter(userFilter);
-				filterList.addFilter(countFilter);
-				Scan scan = new Scan();
-				scan.setFilter(filterList);
-				scan.addColumn(CF_WORD, USERID);
-				scan.addColumn(CF_WORD, VALUE);
-				scan.addColumn(CF_WORD, COUNT);
-				scan.setCaching(500);
-
 				try (ResultScanner scanner = hTable.getScanner(scan)) {
 					for (Result result = scanner.next(); result != null; result = scanner.next()) {
 						byte[] word = result.getValue(CF_WORD, VALUE);
@@ -138,10 +139,10 @@ public class HBaseService {
 	}
 
 	private void saveProfile(Connection connection, User profile) throws IOException {
+		Put put = new Put(Bytes.toBytes(profile.getId()));
+		put.addColumn(CF_USER, USERNAME, Bytes.toBytes(profile.getName()));
+		put.addColumn(CF_USER, JOBSTATUS, PENDING);
 		try (HTable hTable = (HTable) connection.getTable(PROFILE_TABLE)) {
-			Put put = new Put(Bytes.toBytes(profile.getId()));
-			put.addColumn(CF_USER, USERNAME, Bytes.toBytes(profile.getName()));
-			put.addColumn(CF_USER, JOBSTATUS, PENDING);
 			hTable.put(put);
 		}
 	}
