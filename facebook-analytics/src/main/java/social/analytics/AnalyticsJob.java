@@ -16,9 +16,8 @@ public class AnalyticsJob {
 
 	public static class PostsMapper extends TableMapper<Text, IntWritable> {
 
-		private static final String CLEANUP_REGEX = "[^\\p{L}\\p{Nd}]+";
-		private static final String HTTP = "http";
-
+		private final String CLEANUP_REGEX = "[^\\p{L}\\p{Nd}]+";
+		private final String HTTP = "http";
 		private final IntWritable ONE = new IntWritable(1);
 		private Text text = new Text();
 
