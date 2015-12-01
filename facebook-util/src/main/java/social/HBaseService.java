@@ -45,12 +45,14 @@ public class HBaseService {
 	public final static byte[] CF_WORD = Bytes.toBytes("word");
 
 	// Columns
-	public final static byte[] USERID = Bytes.toBytes("userid");
-	public final static byte[] USERNAME = Bytes.toBytes("username");
-	public final static byte[] MESSAGE = Bytes.toBytes("message");
-	public final static byte[] VALUE = Bytes.toBytes("value");
-	public final static byte[] COUNT = Bytes.toBytes("count");
-	public final static byte[] JOBSTATUS = Bytes.toBytes("status");
+	private final static byte[] USERID = Bytes.toBytes("userid");
+	private final static byte[] USERNAME = Bytes.toBytes("username");
+	private final static byte[] MESSAGE = Bytes.toBytes("message");
+	private final static byte[] VALUE = Bytes.toBytes("value");
+	private final static byte[] COUNT = Bytes.toBytes("count");
+	private final static byte[] JOBSTATUS = Bytes.toBytes("status");
+
+	private final static byte[] PENDING = Bytes.toBytes(0);
 
 	public void upload(User profile, List<Post> feed) throws IOException {
 		try (Connection connection = ConnectionFactory.createConnection(hbaseConfig.getConfiguration())) {
@@ -139,7 +141,7 @@ public class HBaseService {
 		try (HTable hTable = (HTable) connection.getTable(PROFILE_TABLE)) {
 			Put put = new Put(Bytes.toBytes(profile.getId()));
 			put.addColumn(CF_USER, USERNAME, Bytes.toBytes(profile.getName()));
-			put.addColumn(CF_USER, JOBSTATUS, Bytes.toBytes(0));
+			put.addColumn(CF_USER, JOBSTATUS, PENDING);
 			hTable.put(put);
 		}
 	}

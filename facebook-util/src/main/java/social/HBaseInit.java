@@ -1,6 +1,8 @@
 package social;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
@@ -19,19 +21,21 @@ public class HBaseInit implements CommandLineRunner {
 	@Autowired
 	private HbaseTemplate hbaseConfig;
 
+	private static final String FORCE_ARG = "force";
+
 	@Override
 	public void run(String... args) throws Exception {
 
-		boolean force = args.length > 0 && args[0].equals("force");
+		Optional<String> force = Arrays.asList(args).stream().filter(arg -> arg.equals(FORCE_ARG)).findFirst();
 
 		try (Connection connection = ConnectionFactory.createConnection(hbaseConfig.getConfiguration())) {
 
 			// Instantiating HbaseAdmin class
 			HBaseAdmin admin = (HBaseAdmin) connection.getAdmin();
 
-			createTable(admin, HBaseService.FEED_TABLE, force, HBaseService.CF_POST);
-			createTable(admin, HBaseService.PROFILE_TABLE, force, HBaseService.CF_USER);
-			createTable(admin, HBaseService.WORDCOUNT_TABLE, force, HBaseService.CF_WORD);
+			createTable(admin, HBaseService.FEED_TABLE, force.isPresent(), HBaseService.CF_POST);
+			createTable(admin, HBaseService.PROFILE_TABLE, force.isPresent(), HBaseService.CF_USER);
+			createTable(admin, HBaseService.WORDCOUNT_TABLE, force.isPresent(), HBaseService.CF_WORD);
 		}
 	}
 
