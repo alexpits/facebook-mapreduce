@@ -14,10 +14,10 @@ import org.apache.hadoop.io.Text;
 
 public class AnalyticsJob {
 
-	private static final String CLEANUP_REGEX = "[^\\p{L}\\p{Nd}]+";
-	private static final String HTTP = "http";
-
 	public static class PostsMapper extends TableMapper<Text, IntWritable> {
+
+		private static final String CLEANUP_REGEX = "[^\\p{L}\\p{Nd}]+";
+		private static final String HTTP = "http";
 
 		private final IntWritable ONE = new IntWritable(1);
 		private Text text = new Text();

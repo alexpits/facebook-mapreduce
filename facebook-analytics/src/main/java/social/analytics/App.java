@@ -44,6 +44,9 @@ public class App {
 	public static final byte[] COUNT = Bytes.toBytes("count");
 	public static final byte[] JOBSTATUS = Bytes.toBytes("status");
 
+	private final static byte[] PENDING = Bytes.toBytes(0);
+	private final static byte[] DONE = Bytes.toBytes(1);
+
 	private Configuration config = HBaseConfiguration.create();
 
 	public App() {
@@ -81,13 +84,13 @@ public class App {
 	private String[] getJobIds() throws IOException {
 		List<String> jobIds = new ArrayList<>();
 		try (Connection connection = ConnectionFactory.createConnection(config)) {
-			try (HTable hTable = (HTable) connection.getTable(App.PROFILE_TABLE)) {
-				SingleColumnValueFilter jobFilter = new SingleColumnValueFilter(App.CF_USER, App.JOBSTATUS,
-						CompareOp.EQUAL, Bytes.toBytes(0));
+			try (HTable hTable = (HTable) connection.getTable(PROFILE_TABLE)) {
+				SingleColumnValueFilter jobFilter = new SingleColumnValueFilter(CF_USER, JOBSTATUS, CompareOp.EQUAL,
+						PENDING);
 				Scan scan = new Scan();
 				scan.setFilter(jobFilter);
-				scan.addColumn(App.CF_USER, App.USERID);
-				scan.addColumn(App.CF_USER, App.JOBSTATUS);
+				scan.addColumn(CF_USER, USERID);
+				scan.addColumn(CF_USER, JOBSTATUS);
 				scan.setCaching(500);
 
 				try (ResultScanner scanner = hTable.getScanner(scan)) {
@@ -106,11 +109,11 @@ public class App {
 		List<Put> puts = new ArrayList<>(jobIds.length);
 		for (String jobId : jobIds) {
 			Put put = new Put(Bytes.toBytes(jobId));
-			put.addColumn(App.CF_USER, App.JOBSTATUS, Bytes.toBytes(1));
+			put.addColumn(CF_USER, JOBSTATUS, DONE);
 			puts.add(put);
 		}
 		try (Connection connection = ConnectionFactory.createConnection(config)) {
-			try (HTable hTable = (HTable) connection.getTable(App.PROFILE_TABLE)) {
+			try (HTable hTable = (HTable) connection.getTable(PROFILE_TABLE)) {
 				hTable.put(puts);
 			}
 		}
@@ -120,19 +123,19 @@ public class App {
 		Job job = Job.getInstance(config, userId);
 		job.setJarByClass(AnalyticsJob.class);
 
-		SingleColumnValueFilter filter = new SingleColumnValueFilter(App.CF_POST, App.USERID, CompareOp.EQUAL,
+		SingleColumnValueFilter filter = new SingleColumnValueFilter(CF_POST, USERID, CompareOp.EQUAL,
 				Bytes.toBytes(userId));
 
 		Scan scan = new Scan();
-		scan.addColumn(App.CF_POST, App.USERID);
-		scan.addColumn(App.CF_POST, App.MESSAGE);
+		scan.addColumn(CF_POST, USERID);
+		scan.addColumn(CF_POST, MESSAGE);
 		scan.setCaching(500);
 		scan.setFilter(filter);
 		scan.setCacheBlocks(false);
 
-		TableMapReduceUtil.initTableMapperJob(App.FEED_TABLE, scan, AnalyticsJob.PostsMapper.class, Text.class,
+		TableMapReduceUtil.initTableMapperJob(FEED_TABLE, scan, AnalyticsJob.PostsMapper.class, Text.class,
 				IntWritable.class, job);
-		TableMapReduceUtil.initTableReducerJob(App.WORDCOUNT_TABLE.toString(), AnalyticsJob.PostsReducer.class, job);
+		TableMapReduceUtil.initTableReducerJob(WORDCOUNT_TABLE.toString(), AnalyticsJob.PostsReducer.class, job);
 		job.setNumReduceTasks(1);
 
 		return new ControlledJob(job, dependingJobs);
