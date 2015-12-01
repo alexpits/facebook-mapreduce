@@ -83,16 +83,16 @@ public class App {
 
 	private String[] getJobIds() throws IOException {
 		List<String> jobIds = new ArrayList<>();
+
+		SingleColumnValueFilter jobFilter = new SingleColumnValueFilter(CF_USER, JOBSTATUS, CompareOp.EQUAL, PENDING);
+		Scan scan = new Scan();
+		scan.setFilter(jobFilter);
+		scan.addColumn(CF_USER, USERID);
+		scan.addColumn(CF_USER, JOBSTATUS);
+		scan.setCaching(500);
+
 		try (Connection connection = ConnectionFactory.createConnection(config)) {
 			try (HTable hTable = (HTable) connection.getTable(PROFILE_TABLE)) {
-				SingleColumnValueFilter jobFilter = new SingleColumnValueFilter(CF_USER, JOBSTATUS, CompareOp.EQUAL,
-						PENDING);
-				Scan scan = new Scan();
-				scan.setFilter(jobFilter);
-				scan.addColumn(CF_USER, USERID);
-				scan.addColumn(CF_USER, JOBSTATUS);
-				scan.setCaching(500);
-
 				try (ResultScanner scanner = hTable.getScanner(scan)) {
 					for (Result result = scanner.next(); result != null; result = scanner.next()) {
 						byte[] jobId = result.getRow();
